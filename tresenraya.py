@@ -4,6 +4,11 @@ class TicTacToe():
     '''
     def __init__(self):
         self.game = [[None, None, None], [None, None, None], [None, None, None]]
+        self.player = 0
+
+    def reset_game(self):
+        self.game = [[None, None, None], [None, None, None], [None, None, None]]
+        self.player = 0
 
     def displayGame(self) -> None:
         '''
@@ -28,7 +33,7 @@ class TicTacToe():
             return True
         return False
     
-    def updateGame(self, position: tuple, player: int) -> None:
+    def updateGame(self, position: tuple) -> None:
         '''
             This function updates de game board after a move.
             Inputs:
@@ -37,7 +42,9 @@ class TicTacToe():
             Outputs:
                 None
         '''
-        self.game[position[0]][position[1]] = player
+        self.game[position[0]][position[1]] = self.player
+        self.player += 1
+        self.player %= 2
     
     def collinearPoints(self, p1: tuple, p2: tuple, p3: tuple) -> bool:
         '''
@@ -73,6 +80,7 @@ class TicTacToe():
         positions_player_1 = [[i, j] for i in range(3) for j in range(3) if self.game[i][j] == 1]
 
         if len(positions_player_0) + len(positions_player_1) == 9:
+            print(len(positions_player_0) + len(positions_player_1))
             gameFinished = True
 
         # This check list could be optimised but we can only have 9 different positions.
@@ -107,11 +115,9 @@ class TicTacToe():
 
     def play(self):
         '''
-            This method implements the playing game.
+            This method implements the playing game for the terminal, needing each time
+            to specify the positions to be filled.
         '''
-
-        nextPlayer = 0
-
 
         while(True):
             self.displayGame()
@@ -119,7 +125,7 @@ class TicTacToe():
             move_y : int
             move_x, move_y = int(input()), int(input())
             if self.checkMove([move_x, move_y]):
-                self.updateGame([move_x, move_y], nextPlayer)
+                self.updateGame([move_x, move_y])
             else:
                 print("Try again, that position is already filled!")
                 continue
@@ -134,5 +140,3 @@ class TicTacToe():
                     print("No one won.")
                     self.displayGame()
                 break
-            nextPlayer += 1
-            nextPlayer %= 2
